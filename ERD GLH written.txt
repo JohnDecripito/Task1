@@ -1,0 +1,141 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table AspNetUsers {
+  UserId string pk
+  UserName string
+  NormalizedUserName string
+  Email string
+  NormalizedEmail string
+  EmailConfirmed bool
+  PasswordHash string
+  SecurityStamp string
+  ConcurrencyStamp string
+  PhoneNumber string
+  PhoneNumberConfirmed bool
+  TwoFactorEnabled bool
+  LockoutEnd datetime
+  LockoutEnabled bool
+  AccessFailedCount int
+}
+
+Table AspNetUserRoles {
+  UserId string 
+  RoleId string
+}
+
+Table AspNetRoles {
+  RoleId string pk
+  Name string
+  NormalizedName string
+  ConcurrencyStamp string
+}
+
+Table AspNetUserClaims {
+  Id int pk
+  UserId string
+  ClaimType string
+  ClaimValue string
+}
+
+Table AspNetUserLogins {
+  LoginProvider string pk
+  ProviderKey string pk
+  ProviderDisplayName string
+  UserId string
+}
+
+Table AspNetUserTokens {
+  UserId string 
+  LoginProvider string pk
+  Name string pk
+  Value string 
+}
+
+Table AspNetRoleClaims {
+  Id int pk
+  RoleId string 
+  ClaimType string
+  ClaimValue string
+}
+
+Table Products {
+  ProductId int pk
+  Name string
+  Description string
+  ShortDescription string
+  Price decimal
+  InStock int
+  Image string
+  IsAvailable bool
+  DateAdded datetime
+  DateUpdated datetime
+  Rating decimal
+  ProductBasket ICollection
+}
+
+Table Basket {
+  BasketId int pk
+  ProductBasketId int
+  BasketStatus bool
+  UserId string
+  ProductBasket ICollection
+}
+
+Table ProductBasket {
+  ProductBasketID int pk
+  ProductID int
+  BasketId int
+  Total decimal
+  Product product
+  Basket basket
+
+}
+
+Table Orders {
+  OrdersId int pk
+  Subtotal int
+  OrderDate datetime
+  DeliveryType string
+  UserId string
+  OrderProduct ICollection
+
+}
+
+Table OrderProduct {
+  OrderProductId int pk
+  OrderId int
+  ProductId int
+  Order order
+  Product product
+}
+
+Table Loyalty {
+  LoyaltyId int pk
+  Points int 
+
+}
+
+Ref: "AspNetUsers"."UserId" < "AspNetUserRoles"."UserId"
+
+Ref: "AspNetUsers"."UserId" < "AspNetUserClaims"."UserId"
+
+Ref: "AspNetUsers"."UserId" < "AspNetUserLogins"."UserId"
+
+Ref: "AspNetUsers"."UserId" < "AspNetUserTokens"."UserId"
+
+Ref: "AspNetRoles"."RoleId" < "AspNetUserRoles"."RoleId"
+
+Ref: "AspNetRoles"."RoleId" < "AspNetRoleClaims"."Id"
+
+Ref: "Products"."ProductId" < "ProductBasket"."ProductID"
+
+Ref: "Basket"."BasketId" < "ProductBasket"."BasketId"
+
+Ref: "AspNetUsers"."UserId" < "Basket"."UserId"
+
+Ref: "AspNetUsers"."UserId" < "Orders"."UserId"
+
+Ref: "Orders"."OrdersId" < "OrderProduct"."OrderId"
+
+Ref: "Products"."ProductId" < "OrderProduct"."ProductId"
