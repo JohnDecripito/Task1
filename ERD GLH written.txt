@@ -61,59 +61,74 @@ Table AspNetRoleClaims {
 
 Table Products {
   ProductId int pk
+  ProducerId int
   Name string
   Description string
   ShortDescription string
   Price decimal
   InStock int
   Image string
+  Category string
   IsAvailable bool
   DateAdded datetime
   DateUpdated datetime
-  Rating decimal
-  ProductBasket ICollection
+  
 }
 
 Table Basket {
   BasketId int pk
   ProductBasketId int
-  BasketStatus bool
   UserId string
-  ProductBasket ICollection
 }
 
 Table ProductBasket {
   ProductBasketID int pk
   ProductID int
   BasketId int
-  Total decimal
-  Product product
-  Basket basket
-
+  SubTotal decimal
+  Quantity int
 }
 
 Table Orders {
   OrdersId int pk
-  Subtotal int
+  UserId string
+  RewardsId int
+  Discount int
+  TotalPrice decimal
   OrderDate datetime
   DeliveryType string
-  UserId string
-  OrderProduct ICollection
-
+  DeliveryAddress string
+  OrderStatus string
 }
 
 Table OrderProduct {
   OrderProductId int pk
   OrderId int
   ProductId int
-  Order order
-  Product product
+  Quantity int
+  Price decimal
 }
 
 Table Loyalty {
   LoyaltyId int pk
+  UserId string
   Points int 
+}
 
+Table Rewards {
+  RewardsId int pk
+  Name string
+  PointsRequired int
+  Discount int
+}
+
+Table Producers {
+  ProducersId int pk
+  UserId string
+  Name string
+  Location string
+  Bio string
+  ProductionMethods string
 }
 
 Ref: "AspNetUsers"."UserId" < "AspNetUserRoles"."UserId"
@@ -132,10 +147,22 @@ Ref: "Products"."ProductId" < "ProductBasket"."ProductID"
 
 Ref: "Basket"."BasketId" < "ProductBasket"."BasketId"
 
-Ref: "AspNetUsers"."UserId" < "Basket"."UserId"
+
 
 Ref: "AspNetUsers"."UserId" < "Orders"."UserId"
 
 Ref: "Orders"."OrdersId" < "OrderProduct"."OrderId"
 
 Ref: "Products"."ProductId" < "OrderProduct"."ProductId"
+
+Ref: "AspNetUsers"."UserId" < "Producers"."UserId"
+
+
+
+Ref: "Producers"."ProducersId" < "Products"."ProducerId"
+
+Ref: "AspNetUsers"."UserId" < "Basket"."UserId"
+
+Ref: "AspNetUsers"."UserId" < "Loyalty"."UserId"
+
+Ref: "Orders"."RewardsId" < "Rewards"."RewardsId"
